@@ -1,38 +1,37 @@
 class Address {
-    String _postalCode;
-    String _country;
-    String _state;
-    String _city;
-    String _street;
+  String? _postalCode;
+  String? _country;
+  String? _state;
+  String? _city;
+  String? _street;
 
-    String get postalCode => _postalCode;
+  String? get postalCode => _postalCode;
 
-    set postalCode(String postalCode) {
-      _postalCode = postalCode;
-    }
-    
-    String get country => _country;
+  set postalCode(String? postalCode) {
+    _postalCode = postalCode;
+  }
 
-    set country(String country) {
-      _country = country;
-    }
-    
-    String get state => _state;
+  String? get country => _country;
 
-    set state(String state) {
-      _state = state;
-    }
-    
-    String get city => _city;
+  set country(String? country) {
+    _country = country;
+  }
 
-    set city(String city) {
-      _city = city;
-    }
-    
-    String get street => _street;
+  String? get state => _state;
 
-    set street(String street) {
-      _street = street;
-    }
-    
+  set state(String? state) {
+    _state = state;
+  }
+
+  String? get city => _city;
+
+  set city(String? city) {
+    _city = city;
+  }
+
+  String? get street => _street;
+
+  set street(String? street) {
+    _street = street;
+  }
 }
