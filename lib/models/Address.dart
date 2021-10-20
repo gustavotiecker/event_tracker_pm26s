@@ -1,4 +1,4 @@
-class Adress {
+class Address {
     String _postalCode;
     String _country;
     String _state;

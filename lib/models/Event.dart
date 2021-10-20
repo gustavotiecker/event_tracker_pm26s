@@ -6,9 +6,9 @@ class Event {
     Double _ticketPrice;
     Double _longitude;
     Double _latitude;
-    Adress _adress;
+    Address _address;
     String _url;
-    Date _strartDate;
+    Date _startDate;
     Date _endDate;
 
     String get id => _id;
@@ -46,9 +46,9 @@ class Event {
       _latitude = latitude;
     }
 
-    Adress get adress => _adress;
-    set adress(Adress adress) {
-      _adress = adress;
+    Address get address => _address;
+    set address(Address address) {
+      _address = address;
     }
 
     String get url => _url;
