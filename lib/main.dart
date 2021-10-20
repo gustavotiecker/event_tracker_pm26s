@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'Scenes/placeholder_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,24 +23,13 @@ class HomeMap extends StatefulWidget {
 
 class HomeMapState extends State<HomeMap> {
   int _selectedIndex = 0;
-  Completer<GoogleMapController> _controller = Completer();
-
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
+  final List _children = [
+    PlaceholderWidget(Colors.white),
+    PlaceholderWidget(Colors.deepOrange),
+    PlaceholderWidget(Colors.green),
+    PlaceholderWidget(Colors.red),
   ];
+  Completer<GoogleMapController> _controller = Completer();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -61,13 +51,7 @@ class HomeMapState extends State<HomeMap> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
+      body: _children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.black,
         items: const <BottomNavigationBarItem>[
@@ -93,10 +77,5 @@ class HomeMapState extends State<HomeMap> {
         onTap: _onItemTapped,
       ),
     );
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }
