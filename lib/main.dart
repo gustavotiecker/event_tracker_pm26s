@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:event_tracker_pm26s/scenes/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'Scenes/placeholder_screen.dart';
@@ -24,7 +25,7 @@ class HomeMap extends StatefulWidget {
 class HomeMapState extends State<HomeMap> {
   int _selectedIndex = 0;
   final List _children = [
-    PlaceholderWidget(Colors.white),
+    HomeMapScreen(),
     PlaceholderWidget(Colors.deepOrange),
     PlaceholderWidget(Colors.green),
     PlaceholderWidget(Colors.red),
@@ -36,17 +37,6 @@ class HomeMapState extends State<HomeMap> {
       _selectedIndex = index;
     });
   }
-
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
 
   @override
   Widget build(BuildContext context) {
