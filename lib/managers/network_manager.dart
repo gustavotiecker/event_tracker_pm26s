@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:event_tracker_pm26s/models/event.dart';
-
 import 'package:http/http.dart';
 
 class NetworkManager {
@@ -11,8 +9,7 @@ class NetworkManager {
   final _baseURL = 'https://app.ticketmaster.com/discovery/v2';
 
   Future<List<Event>> fetchEventsNearCalgary() async {
-    final endPoint = _baseURL +
-        '/events.json?city=Calgary&apikey=79X4shnyf8bicpEGm6YsWrG1nVeEJXQR';
+    final endPoint = _baseURL + '/events.json?city=Calgary&apikey=apikey';
     Response response = await get(Uri.parse(endPoint));
 
     if (response.statusCode == 200) {
