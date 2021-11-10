@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:event_tracker_pm26s/managers/network_manager.dart';
 import 'package:event_tracker_pm26s/scenes/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -34,8 +33,6 @@ class HomeMapState extends State<HomeMap> {
   Completer<GoogleMapController> _controller = Completer();
 
   void _onItemTapped(int index) {
-    NetworkManager.shared.fetchEventsNearCalgary();
-    return;
     setState(() {
       _selectedIndex = index;
     });
