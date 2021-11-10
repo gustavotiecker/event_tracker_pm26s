@@ -1,37 +1,22 @@
 class Address {
-  String? _postalCode;
-  String? _country;
-  String? _state;
-  String? _city;
-  String? _street;
+  String? postalCode;
+  String? country;
+  String? state;
+  String? city;
+  String? street;
 
-  String? get postalCode => _postalCode;
+  Address({this.postalCode, this.country, this.state, this.city, this.street});
 
-  set postalCode(String? postalCode) {
-    _postalCode = postalCode;
-  }
-
-  String? get country => _country;
-
-  set country(String? country) {
-    _country = country;
-  }
-
-  String? get state => _state;
-
-  set state(String? state) {
-    _state = state;
-  }
-
-  String? get city => _city;
-
-  set city(String? city) {
-    _city = city;
-  }
-
-  String? get street => _street;
-
-  set street(String? street) {
-    _street = street;
+  factory Address.fromJson(Map<String, dynamic> json) {
+    return Address(
+        postalCode: json["_embedded"]["venues"][0]["postalCode"]?.toString(),
+        country:
+            json["_embedded"]["venues"][0]["country"]["name"]?.toString() ?? "",
+        state:
+            json["_embedded"]["venues"][0]["state"]["name"]?.toString() ?? "",
+        city: json["_embedded"]["venues"][0]["city"]["name"]?.toString() ?? "",
+        street:
+            json["_embedded"]["venues"][0]["address"]["line1"]?.toString() ??
+                "");
   }
 }
