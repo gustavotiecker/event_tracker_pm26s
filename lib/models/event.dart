@@ -11,6 +11,7 @@ class Event {
   Address? address;
   String? url;
   String? startDate;
+  String? imageURL;
 
   Event(
       {this.id,
@@ -22,23 +23,25 @@ class Event {
       this.latitude,
       this.address,
       this.url,
-      this.startDate});
+      this.startDate,
+      this.imageURL});
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      description: json['description']?.toString() ?? json['info']?.toString(),
-      type: json['type'] as String,
-      ticketPrice: double.tryParse(
-          json["priceRanges"]?.elementAt(0)["min"]?.toString() ?? ""),
-      longitude: double.tryParse(
-          json["_embedded"]["venues"][0]["location"]["longitude"]),
-      latitude: double.tryParse(
-          json["_embedded"]["venues"][0]["location"]["latitude"]),
-      address: new Address.fromJson(json),
-      url: json['url'] as String,
-      startDate: json["dates"]["start"]["dateTime"]?.toString(),
-    );
+        id: json['id'] as String,
+        name: json['name'] as String,
+        description:
+            json['description']?.toString() ?? json['info']?.toString(),
+        type: json['type'] as String,
+        ticketPrice: double.tryParse(
+            json["priceRanges"]?.elementAt(0)["min"]?.toString() ?? ""),
+        longitude: double.tryParse(
+            json["_embedded"]["venues"][0]["location"]["longitude"]),
+        latitude: double.tryParse(
+            json["_embedded"]["venues"][0]["location"]["latitude"]),
+        address: new Address.fromJson(json),
+        url: json['url'] as String,
+        startDate: json["dates"]["start"]["dateTime"]?.toString(),
+        imageURL: json['images'][0]['url']);
   }
 }

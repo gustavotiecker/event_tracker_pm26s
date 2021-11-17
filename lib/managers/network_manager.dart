@@ -7,9 +7,10 @@ class NetworkManager {
   static final NetworkManager shared = NetworkManager._init();
 
   final _baseURL = 'https://app.ticketmaster.com/discovery/v2';
+  final _apiKey = 'API_KEY';
 
   Future<List<Event>> fetchEventsNearCalgary() async {
-    final endPoint = _baseURL + '/events.json?city=Calgary&apikey=apikey';
+    final endPoint = _baseURL + '/events.json?city=Calgary&apikey=' + _apiKey;
     Response response = await get(Uri.parse(endPoint));
 
     if (response.statusCode == 200) {

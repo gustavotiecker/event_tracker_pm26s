@@ -34,8 +34,8 @@ class HomeMapState extends State<HomeMap> {
   Completer<GoogleMapController> _controller = Completer();
 
   void _onItemTapped(int index) {
-    NetworkManager.shared.fetchEventsNearCalgary();
-    return;
+    // NetworkManager.shared.fetchEventsNearCalgary();
+    // return;
     setState(() {
       _selectedIndex = index;
     });
