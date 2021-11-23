@@ -104,7 +104,7 @@ class HomeMapScreenState extends State<HomeMapScreen> {
             infoWindow: InfoWindow(title: event.name),
             icon: BitmapDescriptor.defaultMarker,
             onTap: () {
-              showMaterialModalBottomSheet(
+              showCupertinoModalBottomSheet(
                 context: context,
                 builder: (context) => EventDetails(event: event),
               );
