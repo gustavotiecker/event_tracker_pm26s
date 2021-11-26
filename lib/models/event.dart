@@ -1,70 +1,47 @@
 import 'address.dart';
 
 class Event {
-  String? _id;
-  String? _name;
-  String? _description;
-  String? _type;
-  double? _ticketPrice;
-  double? _longitude;
-  double? _latitude;
-  Address? _address;
-  String? _url;
-  DateTime? _startDate;
-  DateTime? _endDate;
+  String? id;
+  String? name;
+  String? description;
+  String? type;
+  double? ticketPrice;
+  double? longitude;
+  double? latitude;
+  Address? address;
+  String? url;
+  String? startDate;
+  String? imageURL;
 
-  String? get id => _id;
-  set id(String? id) {
-    _id = id;
-  }
+  Event(
+      {this.id,
+      this.name,
+      this.description,
+      this.type,
+      this.ticketPrice,
+      this.longitude,
+      this.latitude,
+      this.address,
+      this.url,
+      this.startDate,
+      this.imageURL});
 
-  String? get name => _name;
-  set name(String? name) {
-    _name = name;
-  }
-
-  String? get description => _description;
-  set description(String? description) {
-    _description = description;
-  }
-
-  String? get type => _type;
-  set type(String? type) {
-    _type = type;
-  }
-
-  double? get ticketPrice => _ticketPrice;
-  set ticketPrice(double? ticketPrice) {
-    _ticketPrice = ticketPrice;
-  }
-
-  double? get longitude => _longitude;
-  set longitude(double? longitude) {
-    _longitude = longitude;
-  }
-
-  double? get latitude => _latitude;
-  set latitude(double? latitude) {
-    _latitude = latitude;
-  }
-
-  Address? get address => _address;
-  set address(Address? address) {
-    _address = address;
-  }
-
-  String? get url => _url;
-  set url(String? url) {
-    _url = url;
-  }
-
-  DateTime? get startDate => _startDate;
-  set startDate(DateTime? startDate) {
-    _startDate = startDate;
-  }
-
-  DateTime? get endDate => _endDate;
-  set endDate(DateTime? endDate) {
-    _endDate = endDate;
+  factory Event.fromJson(Map<String, dynamic> json) {
+    return Event(
+        id: json['id'] as String,
+        name: json['name'] as String,
+        description:
+            json['description']?.toString() ?? json['info']?.toString(),
+        type: json['type'] as String,
+        ticketPrice: double.tryParse(
+            json["priceRanges"]?.elementAt(0)["min"]?.toString() ?? ""),
+        longitude: double.tryParse(
+            json["_embedded"]["venues"][0]["location"]["longitude"]),
+        latitude: double.tryParse(
+            json["_embedded"]["venues"][0]["location"]["latitude"]),
+        address: new Address.fromJson(json),
+        url: json['url'] as String,
+        startDate: json["dates"]["start"]["dateTime"]?.toString(),
+        imageURL: json['images'][0]['url']);
   }
 }
