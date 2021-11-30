@@ -1,6 +1,19 @@
 import 'address.dart';
 
 class Event {
+  static const tableName = 'event';
+  static const fieldId = '_id';
+  static const fieldName = 'name';
+  static const fieldDescription = 'description';
+  static const fieldType = 'type';
+  static const fieldTicketPrice = 'ticketPrice';
+  static const fieldLongitude = 'longitude';
+  static const fieldLatitude = 'latitude';
+  static const fieldAddressId = 'address_id';
+  static const fieldUrl = 'url';
+  static const fieldStartDate = 'startDate';
+  static const fieldImageURL = 'imageURL';
+
   String? id;
   String? name;
   String? description;
@@ -44,4 +57,31 @@ class Event {
         startDate: json["dates"]["start"]["dateTime"]?.toString(),
         imageURL: json['images'][0]['url']);
   }
+
+  Map<String, dynamic> toMap() => {
+    fieldId: id,
+    fieldName: name,
+    fieldDescription: description,
+    fieldType : type,
+    fieldTicketPrice : ticketPrice,
+    fieldLongitude : longitude,
+    fieldLatitude : latitude,
+    //fieldAddressId : Address.id,
+    fieldUrl : url,
+    fieldStartDate : startDate,
+    fieldImageURL : imageURL,
+  };
+
+  factory Event.fromMap(Map<String, dynamic> map) => Event(
+    id: map[fieldId] is String ? map[fieldId] : null,
+    name: map[fieldName] is String ? map[fieldName] : '',
+    description: map[fieldDescription] is String ? map[fieldDescription] : null,
+    type: map[fieldType] is String ? map[fieldType] : null,
+    ticketPrice: map[fieldTicketPrice] is double ? map[fieldTicketPrice] : '',
+    longitude: map[fieldLongitude] is double ? map[fieldLongitude] : null,
+    latitude: map[fieldLatitude] is double ? map[fieldLatitude] : null,
+    url: map[fieldUrl] is String ? map[fieldUrl] : '',
+    startDate: map[fieldStartDate] is String ? map[fieldStartDate] : null,
+    imageURL: map[fieldImageURL] is String ? map[fieldImageURL] : null,
+  );
 }
