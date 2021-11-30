@@ -1,6 +1,7 @@
 import 'package:event_tracker_pm26s/models/event.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const titleStyle = TextStyle(
   color: Colors.black,
@@ -20,14 +21,20 @@ const infoStyle = TextStyle(
   height: 2,
 );
 
-const bodyText = TextStyle(
-    color: Color.fromRGBO(141, 141, 141, 1.0),
+const infoText = TextStyle(
+    color: Color.fromRGBO(100, 100, 100, 1.0),
     fontSize: 14,
     fontWeight: FontWeight.w500,
     height: 1.5);
 
+const bodyText = TextStyle(
+    color: Color.fromRGBO(80, 80, 80, 1.0),
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    height: 1.5);
+
 final double padding = 25;
-final double spacing = 15;
+final double spacing = 18;
 final sidePadding = EdgeInsets.symmetric(horizontal: padding);
 
 class EventDetails extends StatefulWidget {
@@ -93,8 +100,7 @@ Widget _createBody(Event event, BuildContext context) {
                                       padding: EdgeInsets.all(8.0),
                                       child: Center(
                                           child: Icon(Icons.keyboard_backspace,
-                                              color: Color.fromRGBO(
-                                                  48, 47, 48, 1.0)))),
+                                              color: Colors.blue))),
                                 ),
                                 Container(
                                     width: 50,
@@ -111,8 +117,7 @@ Widget _createBody(Event event, BuildContext context) {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Center(
                                         child: Icon(Icons.favorite_border,
-                                            color: Color.fromRGBO(
-                                                48, 47, 48, 1.0)))),
+                                            color: Colors.blue))),
                               ],
                             ),
                           ),
@@ -141,9 +146,35 @@ Widget _createBody(Event event, BuildContext context) {
                     ),
                     addVerticalSpace(spacing),
                     Padding(
-                      padding: sidePadding,
-                      child: Text(convertDate(event.startDate ?? '')),
-                    ),
+                        padding: sidePadding,
+                        child: Row(
+                          children: [
+                            IconTheme(
+                              data: IconThemeData(color: Colors.grey),
+                              child: Icon(Icons.location_on_outlined),
+                            ),
+                            addHorizontalSpace(spacing),
+                            Text(
+                                (event.address?.city ?? '') +
+                                    (', ') +
+                                    (event.address?.street ?? ''),
+                                style: infoText),
+                          ],
+                        )),
+                    addVerticalSpace(spacing),
+                    Padding(
+                        padding: sidePadding,
+                        child: Row(
+                          children: [
+                            IconTheme(
+                              data: IconThemeData(color: Colors.grey),
+                              child: Icon(Icons.calendar_today_outlined),
+                            ),
+                            addHorizontalSpace(spacing),
+                            Text(convertDate(event.startDate ?? ''),
+                                style: infoText),
+                          ],
+                        )),
                     addVerticalSpace(spacing),
                     Padding(
                       padding: sidePadding,
@@ -152,6 +183,25 @@ Widget _createBody(Event event, BuildContext context) {
                               'This event does not have a description.',
                           textAlign: TextAlign.justify,
                           style: bodyText),
+                    ),
+                    addVerticalSpace(spacing * 3),
+                    Padding(
+                      padding: sidePadding,
+                      child: Center(
+                        child: TextButton(
+                            style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              backgroundColor: Colors.blue,
+                              padding: EdgeInsets.all(15),
+                              onSurface: Colors.grey,
+                              textStyle: TextStyle(fontSize: 18),
+                            ),
+                            child: Text('Ver no TicketMaster'),
+                            onPressed: () {
+                              _launchURL(
+                                  event.url ?? 'https://www.ticketmaster.com');
+                            }),
+                      ),
                     ),
                   ],
                 ),
@@ -166,10 +216,18 @@ Widget addVerticalSpace(double height) {
   return SizedBox(height: height);
 }
 
+Widget addHorizontalSpace(double width) {
+  return SizedBox(width: width);
+}
+
 String convertDate(String date) {
-  DateTime parseDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(date);
+  DateTime parseDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(date);
   var inputDate = DateTime.parse(parseDate.toString());
   var outputFormat = DateFormat('MM/dd/yyyy hh:mm a');
   var outputDate = outputFormat.format(inputDate);
   return outputDate;
+}
+
+_launchURL(String url) async {
+  if (!await launch(url)) throw 'Could not launch $url';
 }
