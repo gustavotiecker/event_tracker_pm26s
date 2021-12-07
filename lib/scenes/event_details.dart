@@ -1,5 +1,4 @@
 import 'package:event_tracker_pm26s/dao/event_dao.dart';
-import 'package:event_tracker_pm26s/database/database_provider.dart';
 import 'package:event_tracker_pm26s/models/event.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -173,7 +172,7 @@ class _EventDetailsState extends State<EventDetails> {
                                 child: Icon(Icons.calendar_today_outlined),
                               ),
                               addHorizontalSpace(spacing),
-                              Text(convertDate(event.startDate ?? ''),
+                              Text(convertDate(event.startDate),
                                   style: infoText),
                             ],
                           )),
@@ -237,12 +236,15 @@ Widget addHorizontalSpace(double width) {
   return SizedBox(width: width);
 }
 
-String convertDate(String date) {
-  DateTime parseDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(date);
-  var inputDate = DateTime.parse(parseDate.toString());
-  var outputFormat = DateFormat('MM/dd/yyyy hh:mm a');
-  var outputDate = outputFormat.format(inputDate);
-  return outputDate;
+String convertDate(String? date) {
+  if (date != null) {
+    DateTime parseDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(date);
+    var inputDate = DateTime.parse(parseDate.toString());
+    var outputFormat = DateFormat('MM/dd/yyyy hh:mm a');
+    var outputDate = outputFormat.format(inputDate);
+    return outputDate;
+  }
+  return 'This event does not have registered date';
 }
 
 _launchURL(String url) async {

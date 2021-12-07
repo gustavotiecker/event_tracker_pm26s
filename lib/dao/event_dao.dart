@@ -17,7 +17,11 @@ class EventDao {
     return true;
   }
 
-  Future<bool> remove(String id) async {
+  Future<bool> remove(String? id) async {
+    if (id == null) {
+      return false;
+    }
+
     final database = await databaseProvider.database;
     final updatedRecords = await database.delete(
       Event.tableName,
