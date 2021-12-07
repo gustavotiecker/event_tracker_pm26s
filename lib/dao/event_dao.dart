@@ -1,27 +1,23 @@
 import 'package:event_tracker_pm26s/database/database_provider.dart';
 import 'package:event_tracker_pm26s/models/event.dart';
+import 'package:sqflite/sqflite.dart';
 
-class EventDao{
+class EventDao {
   final databaseProvider = DatabaseProvider.instance;
 
   Future<bool> save(Event event) async {
     final database = await databaseProvider.database;
-    final values = event.toMap();
-    if (event.id == null) {
-      event.id = await database.insert(Event.tableName, values).toString();
-      return true;
-    } else {
-      final updatedRecords = await database.update(
-        Event.tableName,
-        values,
-        where: '${Event.fieldId} = ?',
-        whereArgs: [event.id],
-      );
-      return updatedRecords > 0;
-    }
+
+    await database.insert(
+      Event.tableName,
+      event.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    return true;
   }
 
-  Future<bool> remove(int id) async {
+  Future<bool> remove(String id) async {
     final database = await databaseProvider.database;
     final updatedRecords = await database.delete(
       Event.tableName,
@@ -43,7 +39,6 @@ class EventDao{
         Event.fieldTicketPrice,
         Event.fieldLongitude,
         Event.fieldLatitude,
-        Event.fieldAddressId,
         Event.fieldUrl,
         Event.fieldStartDate,
         Event.fieldImageURL,

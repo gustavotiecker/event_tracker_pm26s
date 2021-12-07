@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:event_tracker_pm26s/managers/network_manager.dart';
+import 'package:event_tracker_pm26s/scenes/favorites_screen.dart';
 import 'package:event_tracker_pm26s/scenes/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -28,7 +29,7 @@ class HomeMapState extends State<HomeMap> {
   final List _children = [
     HomeMapScreen(),
     PlaceholderWidget(Colors.deepOrange),
-    PlaceholderWidget(Colors.green),
+    FavoritesScreen(),
     PlaceholderWidget(Colors.red),
   ];
   Completer<GoogleMapController> _controller = Completer();

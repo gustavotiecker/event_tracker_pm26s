@@ -1,3 +1,5 @@
+import 'package:event_tracker_pm26s/dao/event_dao.dart';
+import 'package:event_tracker_pm26s/database/database_provider.dart';
 import 'package:event_tracker_pm26s/models/event.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -36,6 +38,9 @@ const bodyText = TextStyle(
 final double padding = 25;
 final double spacing = 18;
 final sidePadding = EdgeInsets.symmetric(horizontal: padding);
+var _isFavorite = false;
+
+final _eventDao = EventDao();
 
 class EventDetails extends StatefulWidget {
   final Event event;
@@ -48,168 +53,180 @@ class EventDetails extends StatefulWidget {
 
 class _EventDetailsState extends State<EventDetails> {
   @override
+  void initState() {
+    super.initState();
+    _modifyFavorite(widget.event);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return new Scaffold(body: _createBody(widget.event, context));
   }
-}
 
-Widget _createBody(Event event, BuildContext context) {
-  return Align(
-    alignment: Alignment.center,
-    child: SafeArea(
-      child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(
-                      children: [
-                        Image.network(event.imageURL!,
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height / 4,
-                            fit: BoxFit.fill),
-                        Positioned(
-                          width: MediaQuery.of(context).size.width,
-                          top: padding,
-                          child: Padding(
-                            padding: sidePadding,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(15.0)),
-                                          border: Border.all(
-                                              color: Color.fromRGBO(
-                                                      141, 141, 141, 1.0)
-                                                  .withAlpha(40),
-                                              width: 2)),
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Center(
-                                          child: Icon(Icons.keyboard_backspace,
-                                              color: Colors.blue))),
-                                ),
-                                Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(15.0)),
-                                        border: Border.all(
-                                            color: Color.fromRGBO(
-                                                    141, 141, 141, 1.0)
-                                                .withAlpha(40),
-                                            width: 2)),
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Center(
-                                        child: Icon(Icons.favorite_border,
-                                            color: Colors.blue))),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    addVerticalSpace(spacing),
-                    Padding(
-                      padding: sidePadding,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _createBody(Event event, BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: SafeArea(
+        child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Stack(
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                  width: 300,
-                                  child: Text(
-                                    event.name ?? '',
-                                    style: titleStyle,
-                                  )),
-                            ],
+                          Image.network(event.imageURL!,
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height / 4,
+                              fit: BoxFit.fill),
+                          Positioned(
+                            width: MediaQuery.of(context).size.width,
+                            top: padding,
+                            child: Padding(
+                              padding: sidePadding,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15.0)),
+                                            border: Border.all(
+                                                color: Color.fromRGBO(
+                                                        141, 141, 141, 1.0)
+                                                    .withAlpha(40),
+                                                width: 2)),
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Center(
+                                            child: Icon(
+                                                Icons.keyboard_backspace,
+                                                color: Colors.blue))),
+                                  ),
+                                  InkWell(
+                                      onTap: () {
+                                        _eventDao.save(event).then(
+                                            (value) => _modifyFavorite(event));
+                                      },
+                                      child: _createFavoriteIcon())
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    addVerticalSpace(spacing),
-                    Padding(
+                      addVerticalSpace(spacing),
+                      Padding(
                         padding: sidePadding,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            IconTheme(
-                              data: IconThemeData(color: Colors.grey),
-                              child: Icon(Icons.location_on_outlined),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                    width: 300,
+                                    child: Text(
+                                      event.name ?? '',
+                                      style: titleStyle,
+                                    )),
+                              ],
                             ),
-                            addHorizontalSpace(spacing),
-                            Text(
-                                (event.address?.city ?? '') +
-                                    (', ') +
-                                    (event.address?.street ?? ''),
-                                style: infoText),
                           ],
-                        )),
-                    addVerticalSpace(spacing),
-                    Padding(
-                        padding: sidePadding,
-                        child: Row(
-                          children: [
-                            IconTheme(
-                              data: IconThemeData(color: Colors.grey),
-                              child: Icon(Icons.calendar_today_outlined),
-                            ),
-                            addHorizontalSpace(spacing),
-                            Text(convertDate(event.startDate ?? ''),
-                                style: infoText),
-                          ],
-                        )),
-                    addVerticalSpace(spacing),
-                    Padding(
-                      padding: sidePadding,
-                      child: Text(
-                          event.description ??
-                              'This event does not have a description.',
-                          textAlign: TextAlign.justify,
-                          style: bodyText),
-                    ),
-                    addVerticalSpace(spacing * 3),
-                    Padding(
-                      padding: sidePadding,
-                      child: Center(
-                        child: TextButton(
-                            style: TextButton.styleFrom(
-                              primary: Colors.white,
-                              backgroundColor: Colors.blue,
-                              padding: EdgeInsets.all(15),
-                              onSurface: Colors.grey,
-                              textStyle: TextStyle(fontSize: 18),
-                            ),
-                            child: Text('Ver no TicketMaster'),
-                            onPressed: () {
-                              _launchURL(
-                                  event.url ?? 'https://www.ticketmaster.com');
-                            }),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          )),
-    ),
-  );
+                      addVerticalSpace(spacing),
+                      Padding(
+                          padding: sidePadding,
+                          child: Row(
+                            children: [
+                              IconTheme(
+                                data: IconThemeData(color: Colors.grey),
+                                child: Icon(Icons.location_on_outlined),
+                              ),
+                              addHorizontalSpace(spacing),
+                              Text(
+                                  (event.address?.city ?? '') +
+                                      (', ') +
+                                      (event.address?.street ?? ''),
+                                  style: infoText),
+                            ],
+                          )),
+                      addVerticalSpace(spacing),
+                      Padding(
+                          padding: sidePadding,
+                          child: Row(
+                            children: [
+                              IconTheme(
+                                data: IconThemeData(color: Colors.grey),
+                                child: Icon(Icons.calendar_today_outlined),
+                              ),
+                              addHorizontalSpace(spacing),
+                              Text(convertDate(event.startDate ?? ''),
+                                  style: infoText),
+                            ],
+                          )),
+                      addVerticalSpace(spacing),
+                      Padding(
+                        padding: sidePadding,
+                        child: Text(
+                            event.description ??
+                                'This event does not have a description.',
+                            textAlign: TextAlign.justify,
+                            style: bodyText),
+                      ),
+                      addVerticalSpace(spacing * 3),
+                      Padding(
+                        padding: sidePadding,
+                        child: Center(
+                          child: TextButton(
+                              style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                backgroundColor: Colors.blue,
+                                padding: EdgeInsets.all(15),
+                                onSurface: Colors.grey,
+                                textStyle: TextStyle(fontSize: 18),
+                              ),
+                              child: Text('Ver no TicketMaster'),
+                              onPressed: () {
+                                _launchURL(event.url ??
+                                    'https://www.ticketmaster.com');
+                              }),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            )),
+      ),
+    );
+  }
+
+  void _modifyFavorite(Event event) async {
+    setState(() {
+      _eventDao.list().then((events) => {
+            events.forEach((eventFounded) {
+              if (event.id == eventFounded.id) {
+                _isFavorite = true;
+              } else {
+                _isFavorite = false;
+              }
+            })
+          });
+    });
+  }
 }
 
 Widget addVerticalSpace(double height) {
@@ -230,4 +247,30 @@ String convertDate(String date) {
 
 _launchURL(String url) async {
   if (!await launch(url)) throw 'Could not launch $url';
+}
+
+Container _createFavoriteIcon() {
+  if (_isFavorite) {
+    return Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        ),
+        padding: const EdgeInsets.all(8.0),
+        child: Center(child: Icon(Icons.favorite, color: Colors.red)));
+  } else {
+    return Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+            border: Border.all(
+                color: Color.fromRGBO(141, 141, 141, 1.0).withAlpha(40),
+                width: 2)),
+        padding: const EdgeInsets.all(8.0),
+        child: Center(child: Icon(Icons.favorite_border, color: Colors.blue)));
+  }
 }

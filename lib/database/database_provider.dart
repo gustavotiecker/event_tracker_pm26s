@@ -1,4 +1,3 @@
-import 'package:event_tracker_pm26s/models/address.dart';
 import 'package:event_tracker_pm26s/models/event.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -33,21 +32,9 @@ class DatabaseProvider {
         ${Event.fieldTicketPrice} NUMERIC,
         ${Event.fieldLongitude} NUMERIC,
         ${Event.fieldLatitude} NUMERIC,
-        ${Event.fieldAddressId} INTEGER,
         ${Event.fieldUrl} TEXT,
         ${Event.fieldStartDate} TEXT,
-        ${Event.fieldImageURL} TEXT,
-        FOREIGN KEY (address_id)
-        REFERENCES address (id) 
-      );
-
-      CREATE TABLE ${Address.tableName} (
-        ${Address.fieldId} INTEGER PRIMARY KEY AUTOINCREMENT,
-        ${Address.fieldPostalCode} TEXT,
-        ${Address.fieldCountry} TEXT,
-        ${Address.fieldState} TEXT,
-        ${Address.fieldCity} NUMERIC,
-        ${Address.fieldStreet} NUMERIC,
+        ${Event.fieldImageURL} TEXT
       );
     ''');
   }

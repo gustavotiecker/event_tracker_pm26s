@@ -35,7 +35,10 @@ class HomeMapScreenState extends State<HomeMapScreen> {
         );
       });
     });
-    NetworkManager.shared.fetchEventsNearCalgary().then((value) {
+    NetworkManager.shared
+        .fetchEventsNearby(_currentPosition?.latitude ?? 34.0522342,
+            _currentPosition?.longitude ?? -118.2436849)
+        .then((value) {
       setState(() {
         _events = value;
         fillMarkersList();
