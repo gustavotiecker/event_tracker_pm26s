@@ -1,8 +1,9 @@
 import 'package:event_tracker_pm26s/dao/event_dao.dart';
 import 'package:event_tracker_pm26s/models/event.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:event_tracker_pm26s/utils/url_utils.dart';
+import 'package:event_tracker_pm26s/utils/layout_utils.dart';
+import 'package:event_tracker_pm26s/utils/date_utils.dart';
 
 const titleStyle = TextStyle(
   color: Colors.black,
@@ -199,7 +200,7 @@ class _EventDetailsState extends State<EventDetails> {
                               ),
                               child: Text('Ver no TicketMaster'),
                               onPressed: () {
-                                _launchURL(event.url ??
+                                launchURL(event.url ??
                                     'https://www.ticketmaster.com');
                               }),
                         ),
@@ -214,41 +215,21 @@ class _EventDetailsState extends State<EventDetails> {
   }
 
   void _modifyFavorite(Event event) async {
-    setState(() {
-      _eventDao.list().then((events) => {
-            events.forEach((eventFounded) {
-              if (event.id == eventFounded.id) {
+    _eventDao.list().then((events) => {
+          events.forEach((eventFounded) {
+            if (event.id == eventFounded.id) {
+              setState(() {
                 _isFavorite = true;
-              } else {
+              });
+              return;
+            } else {
+              setState(() {
                 _isFavorite = false;
-              }
-            })
-          });
-    });
+              });
+            }
+          })
+        });
   }
-}
-
-Widget addVerticalSpace(double height) {
-  return SizedBox(height: height);
-}
-
-Widget addHorizontalSpace(double width) {
-  return SizedBox(width: width);
-}
-
-String convertDate(String? date) {
-  if (date != null) {
-    DateTime parseDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(date);
-    var inputDate = DateTime.parse(parseDate.toString());
-    var outputFormat = DateFormat('MM/dd/yyyy hh:mm a');
-    var outputDate = outputFormat.format(inputDate);
-    return outputDate;
-  }
-  return 'This event does not have registered date';
-}
-
-_launchURL(String url) async {
-  if (!await launch(url)) throw 'Could not launch $url';
 }
 
 Container _createFavoriteIcon() {

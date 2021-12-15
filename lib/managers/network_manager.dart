@@ -31,7 +31,31 @@ class NetworkManager {
 
       return events;
     } else {
-      throw Exception('Failed to load album');
+      throw Exception('Failed to load events');
+    }
+  }
+
+  Future<List<Event>> fetchEventsBySearch(String keyword) async {
+    final endPoint = _baseURL +
+        '/events?apikey=' +
+        _apiKey +
+        '&keyword=' +
+        keyword +
+        '&locale=*';
+    Response response = await get(Uri.parse(endPoint));
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body)["_embedded"]["events"];
+
+      List<Event> events = body
+          .map(
+            (dynamic item) => Event.fromJson(item),
+          )
+          .toList();
+
+      return events;
+    } else {
+      throw Exception('Failed to load events');
     }
   }
 }

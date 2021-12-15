@@ -14,7 +14,13 @@ class Address {
   String? city;
   String? street;
 
-  Address({this.id, this.postalCode, this.country, this.state, this.city, this.street});
+  Address(
+      {this.id,
+      this.postalCode,
+      this.country,
+      this.state,
+      this.city,
+      this.street});
 
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
@@ -23,29 +29,28 @@ class Address {
         country:
             json["_embedded"]["venues"][0]["country"]["name"]?.toString() ?? "",
         state:
-            json["_embedded"]["venues"][0]["state"]["name"]?.toString() ?? "",
+            json["_embedded"]["venues"][0]["state"]?["name"]?.toString() ?? "",
         city: json["_embedded"]["venues"][0]["city"]["name"]?.toString() ?? "",
         street:
-            json["_embedded"]["venues"][0]["address"]["line1"]?.toString() ??
+            json["_embedded"]["venues"][0]["address"]?["line1"]?.toString() ??
                 "");
   }
 
   Map<String, dynamic> toMap() => {
-    fieldId: id,
-    fieldPostalCode: postalCode,
-    fieldCountry: country,
-    fieldState: state,
-    fieldCity: city,
-    fieldStreet: street,
-  };
+        fieldId: id,
+        fieldPostalCode: postalCode,
+        fieldCountry: country,
+        fieldState: state,
+        fieldCity: city,
+        fieldStreet: street,
+      };
 
   factory Address.fromMap(Map<String, dynamic> map) => Address(
-    id: map[fieldId] is int ? map[fieldId] : null,
-    postalCode: map[fieldPostalCode] is String ? map[fieldPostalCode] : '',
-    country: map[fieldCountry] is String ? map[fieldCountry] : null,
-    state: map[fieldState] is String ? map[fieldState] : null,
-    city: map[fieldCity] is double ? map[fieldCity] : '',
-    street: map[fieldStreet] is double ? map[fieldStreet] : null,
-  );
-
+        id: map[fieldId] is int ? map[fieldId] : null,
+        postalCode: map[fieldPostalCode] is String ? map[fieldPostalCode] : '',
+        country: map[fieldCountry] is String ? map[fieldCountry] : null,
+        state: map[fieldState] is String ? map[fieldState] : null,
+        city: map[fieldCity] is double ? map[fieldCity] : '',
+        street: map[fieldStreet] is double ? map[fieldStreet] : null,
+      );
 }

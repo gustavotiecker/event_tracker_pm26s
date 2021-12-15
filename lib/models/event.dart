@@ -48,9 +48,9 @@ class Event {
         ticketPrice: double.tryParse(
             json["priceRanges"]?.elementAt(0)["min"]?.toString() ?? ""),
         longitude: double.tryParse(
-            json["_embedded"]["venues"][0]["location"]["longitude"]),
+            json["_embedded"]?["venues"]?[0]?["location"]?["longitude"] ?? "0"),
         latitude: double.tryParse(
-            json["_embedded"]["venues"][0]["location"]["latitude"]),
+            json["_embedded"]?["venues"]?[0]?["location"]?["latitude"] ?? "0"),
         address: new Address.fromJson(json),
         url: json['url'] as String,
         startDate: json["dates"]["start"]["dateTime"]?.toString(),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:event_tracker_pm26s/managers/network_manager.dart';
 import 'package:event_tracker_pm26s/scenes/favorites_screen.dart';
 import 'package:event_tracker_pm26s/scenes/home_screen.dart';
+import 'package:event_tracker_pm26s/scenes/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'Scenes/placeholder_screen.dart';
@@ -28,9 +29,9 @@ class HomeMapState extends State<HomeMap> {
   int _selectedIndex = 0;
   final List _children = [
     HomeMapScreen(),
-    PlaceholderWidget(Colors.deepOrange),
+    SearchScreen(),
     FavoritesScreen(),
-    PlaceholderWidget(Colors.red),
+    PlaceholderWidget(Colors.white),
   ];
   Completer<GoogleMapController> _controller = Completer();
 
