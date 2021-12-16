@@ -9,12 +9,11 @@ void main() {
     expect(list.first.name!.isNotEmpty, equals(true));
   });
 
-
-  test("fetchEventsBySearch: deve retornar uma lista de eventos  comp palavras chave", () async {
+  test(
+      "fetchEventsBySearch: deve retornar uma lista de eventos  comp palavras chave",
+      () async {
     final list = await network.fetchEventsBySearch("foo");
     print(list.first.name);
     expect(list.isNotEmpty, equals(true));
   });
-
-
 }
